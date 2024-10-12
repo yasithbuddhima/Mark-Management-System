@@ -29,6 +29,7 @@ def index():
 @app.route('/flash_example')
 def flash_example():
     flash('This is a flash message!', 'info')  # Flash a message
+    flash('This is a flash message!', 'info')  # Flash a message
     return redirect(url_for('index'))
 
 
