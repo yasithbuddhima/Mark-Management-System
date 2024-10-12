@@ -18,7 +18,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar">
-                {% if session["user_id"] %}
+                {% if session["class_id"] %}
                     <ul class="navbar-nav me-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/1">1</a></li>
                         <li class="nav-item"><a class="nav-link" href="/2">2</a></li>
@@ -46,10 +46,6 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <!-- <div class="alert alert-primary mb-0 text-center" role="alert">
-            {{ get_flashed_messages() | join(" ") }}
-            
-        </div> -->
     </header>
     {% endif %}
     

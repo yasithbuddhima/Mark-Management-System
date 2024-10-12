@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template , flash ,url_for ,redirect
+from flask import Flask, request, jsonify, render_template , flash ,url_for ,redirect ,session
 from flask_session import Session
 from cs50 import SQL
 
@@ -26,6 +26,42 @@ def after_request(response):
 def index():
     return render_template('index.html')
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+@app.route("/register" , methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        className = request.form.get("class")
+        level = request.form.get("level")
+        term = request.form.get("term")
+        year = request.form.get("year")
+
+        if not term or not level :
+            flash("Please fill out all fields","danger")
+            return render_template("register.html")
+        else:
+            check_user = db.execute(
+                "SELECT * FROM classes WHERE class = ? AND term = ? AND year = ? AND level = ?",
+                className , term , year)
+           
+            if check_user:
+                flash("Class is already exist.","success")
+                session["class_id"] = check_user
+                return redirect("/")
+            new_class = db.execute(
+                "INSERT INTO classes (class , term , year , level) VALUES (?,?,?,?)",
+                className, term , year , level
+            )
+            session["class_id"] = new_class
+            flash( term + " of " + className + " class added successfully", "info")   
+            return redirect("/")
+    else:
+        return render_template("register.html")
+
+
 @app.route('/flash_example')
 def flash_example():
     flash('This is a flash message!', 'info')  # Flash a message
@@ -34,4 +70,4 @@ def flash_example():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True ,host='0.0.0.0')

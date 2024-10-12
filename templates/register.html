@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add New Class
+{% endblock %}
+
+{% block main %}
+    <form action="/register" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="class" placeholder="Class (ex:- 10-B)" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="year" placeholder="Year" type="number" min="2020" required>
+        </div>
+        <select class="form-select mx-auto  mb-3" name="term" style="width: 205px;" required>
+            <option disabled selected>Term</option>
+            <option value="1st term ">1st term</option>
+            <option value="2nd term">2nd term</option>
+            <option value="3rd term">3rd term</option>
+            <option value="Other">Other</option>
+        </select>
+        <select class="form-select mx-auto  mb-3" name="level" style="width: 205px;" required>
+            <option disabled selected>O/L or A/l</option>
+            <option value="ol ">Ordinary Level</option>
+            <option value="al">Advanced Level</option>
+        </select>
+            
+        <button class="btn btn-primary" type="submit">Add New class</button>
+    </form>
+{% endblock %}
+
