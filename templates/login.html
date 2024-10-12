@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Go to Class
+{% endblock %}
+
+{% block main %}
+    <form action="/login" method="post">
+        
+        <select class="form-select mx-auto  mb-3" name="class_id" style="width: 205px;" required>
+            <option disabled selected>Select Class</option>
+            {% for class in class_db %}
+            <option value="{{ class.class_id }} ">{{ class.term}} of class {{ class.class }} in {{ class.year}} </option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit">Go to class</button>
+    </form>
+{% endblock %}

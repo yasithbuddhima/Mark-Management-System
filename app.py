@@ -26,9 +26,19 @@ def after_request(response):
 def index():
     return render_template('index.html')
 
-@app.route("/login")
+@app.route("/login" , methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    if request.method == "GET":
+        class_db = db.execute("SELECT * FROM classes")
+        if not class_db :
+            flash("No classes added yet. Add new class","danger")
+            return redirect("/register")
+        else:
+            return render_template("login.html" , class_db=class_db)
+    else:
+        session["class_id"] = request.form.get("class_id")
+        flash("Success !" , "success")
+        return redirect("/")
 
 
 @app.route("/register" , methods=["GET", "POST"])
@@ -45,7 +55,7 @@ def register():
         else:
             check_user = db.execute(
                 "SELECT * FROM classes WHERE class = ? AND term = ? AND year = ? AND level = ?",
-                className , term , year)
+                className , term , year , level)
            
             if check_user:
                 flash("Class is already exist.","success")
