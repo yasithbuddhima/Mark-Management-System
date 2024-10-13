@@ -4,7 +4,6 @@ from cs50 import SQL
 from functools import wraps
 import secrets
 
-
 app = Flask(__name__)
 
 # Generate a random 16-byte secret key
@@ -46,16 +45,20 @@ def login():
         else:
             return render_template("login.html" , class_db=class_db)
     else:
-        session["class_id"] = request.form.get("class_id")
-        flash("Success !" , "success")
-        return redirect("/")
+        if not request.form.get("class_id"):
+            flash("Select a class" , "danger")
+            return redirect("/login")
+        else:
+            session["class_id"] = request.form.get("class_id")
+            flash("Success !" , "success")
+            return redirect("/")
 
 
 @app.route("/register" , methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         className = request.form.get("class")
-        level = request.form.get("level")
+        level = str(request.form.get("level"))
         term = request.form.get("term")
         year = request.form.get("year")
 
@@ -113,6 +116,46 @@ def percentage():
 
         # Process the number (your logic could go here, like database insertion)
         return jsonify({"result": f"{percentage_formatted} %"})
+
+@app.route("/addmarks", methods=["GET", "POST"])
+@login_required
+def addmarks():
+    if request.method == "GET":
+        if request.args.get("subject") :
+            subject = request.args.get("subject")
+            updated_students = db.execute("SELECT MAX(student_id) AS last_student FROM students WHERE subject = ? AND class_id = ? ", subject , session["class_id"])     
+            if updated_students[0]["last_student"] :
+                student_id = int(updated_students[0]["last_student"])  + 1
+            else:
+                student_id = 1
+            return render_template("addmarks.html" , student_id=student_id , subject=subject)
+        else:
+            class_id = session["class_id"]
+            subjects_db = db.execute("SELECT name FROM  subjects WHERE level = (SELECT level FROM classes WHERE class_id = ?) ", class_id)
+            return render_template("addmarks.html" , subjects_db=subjects_db , class_id=class_id )
+        
+    else:
+        data = request.get_json()  # Safely retrieve JSON data
+        marks = int(data["num"])
+        subject = data["subject"]
+        class_id = session["class_id"]
+        if not data or 'num' not in data:
+            return jsonify({"error": "No number provided"}), 400
+        
+        updated_students = db.execute("SELECT MAX(student_id) AS last_student FROM students WHERE subject = ? AND class_id = ? ", subject , class_id )     
+        if updated_students[0]["last_student"] :
+            student_id = int(updated_students[0]["last_student"])  + 1
+        else:
+            student_id = 1
+        
+        one = db.execute(
+            "INSERT INTO students (student_id , class_id , subject , mark ) VALUES ( ? , ? , ? , ?)",
+            student_id , class_id , subject , marks)
+
+        student_id = student_id + 1
+        # Process the number (your logic could go here, like database insertion)
+        return jsonify({"marks" : f"{one}" , "subject" : f"{subject}", "current_student" : f"{student_id}" ,"clear_flash": True})
+
 
 if __name__ == "__main__":
     app.run(debug=True ,host='0.0.0.0')

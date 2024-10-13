@@ -43,13 +43,15 @@ input {
     padding: 10px;
     font-size: 22px;
     font-weight: bold;
-    color: #fff;
+    color: #ffffff;
     background-color: #4CAF50; /* Green background */
     border-radius: 5px; /* Rounded corners */
     text-align: center;
     display: none; /* Hide initially */
 }
-
+#result span {
+    color: rgba(255, 255, 255, 0.555);
+}
 #result.error {
     background-color: #f44336; /* Red background for error */
 }
