@@ -1,12 +1,59 @@
-.info {
-    color: blue;
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    max-width: 311px;
+    margin: 20px auto;
 }
-.error {
-    color: red;
+
+.key {
+    display: flex; /* Enables Flexbox */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    background-color: #ddd;
+    cursor: pointer;
+    user-select: none;
+    height: 85px;
+    width: 85px;
+    margin: 6px; 
+    border-radius: 10px; /* Rounds the corners for a nicer look */
+    border: 2px solid #bbb; /* Adds a subtle border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a slight shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-ul {
-    list-style-type: none;
+
+.key:active {
+    background-color: #bbb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+input {
+    font-size: 20px;
+    padding: 10px;
+    width: 200px;
+}
+
+
+/* Styling the result */
+#result {
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4CAF50; /* Green background */
+    border-radius: 5px; /* Rounded corners */
+    text-align: center;
+    display: none; /* Hide initially */
+}
+
+#result.error {
+    background-color: #f44336; /* Red background for error */
+}
+
 .fletter{
-    color: black ;
+    color: black;
 }

@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template , flash ,url_for ,redirect ,session
 from flask_session import Session
 from cs50 import SQL
-
+from functools import wraps
 import secrets
 
 
@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
 # Use CS50's SQL library to connect to the database
-db = SQL("sqlite:///mms.db")  # Make sure this points to your actual database file
+db = SQL("sqlite:///mms.db") 
 
 @app.after_request
 def after_request(response):
@@ -22,7 +22,17 @@ def after_request(response):
     return response
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("class_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+
+    return decorated_function
+
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
 
@@ -76,12 +86,33 @@ def logout():
     session.clear()
     return redirect("/login")
 
-@app.route('/flash_example')
-def flash_example():
-    flash('This is a flash message!', 'info')  # Flash a message
-    flash('This is a flash message!', 'info')  # Flash a message
-    return redirect(url_for('index'))
+@app.route("/percentage", methods=["GET", "POST"])
+@login_required
+def percentage():
+    if request.method == "GET":
+        num_of_sub = request.args.get('numOfSub', default=1, type=int)
+        return render_template("percentage.html", num_of_sub=num_of_sub)
+
+    if request.method == "POST":
+        data = request.get_json()  # Safely retrieve JSON data
+  
+        if not data or 'num' not in data:
+            return jsonify({"error": "No number provided"}), 400
+        
+        if data["num"] > ( data["num_of_sub"] * 100) :
+            return jsonify({"error": "Invalid mark"}), 400
+
+        try:
+            num = int(data["num"])
+            num_of_sub = int(data["num_of_sub"])
+            percentage = num / num_of_sub 
+            percentage_formatted = f"{percentage:.2f}"
+        except ValueError:
+            return jsonify({"error": "Invalid number format"}), 400
 
 
-if __name__ == '__main__':
+        # Process the number (your logic could go here, like database insertion)
+        return jsonify({"result": f"{percentage_formatted} %"})
+
+if __name__ == "__main__":
     app.run(debug=True ,host='0.0.0.0')

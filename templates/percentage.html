@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    {% if not num_of_sub > 1 %}
+        <form action="/percentage" method="get">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="numOfSub" placeholder="Number of subjects" type="number" min="2" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Calculate</button>
+        </form>
+    {% else %}
+
+        <div id="result"></div>
+        <form id="numberForm">
+            <input type="number" id="num" placeholder="Enter Marks" required autofocus >
+        </form>
+        <div class="keyboard">
+            <div class="key">1</div>
+            <div class="key">2</div>
+            <div class="key">3</div>
+            <div class="key">4</div>
+            <div class="key">5</div>
+            <div class="key">6</div>
+            <div class="key">7</div>
+            <div class="key">8</div>
+            <div class="key">9</div>
+            <div class="key" id="clear">Clear</div>
+            <div class="key" id="zero">0</div>
+            <div class="key" id="enter">Enter</div>
+        </div>
+
+        <script>
+            const form = document.getElementById('numberForm');
+            const numInput = document.getElementById('num');
+            const resultDiv = document.getElementById('result');
+            const keys = document.querySelectorAll('.key');
+
+            const numOfSub = {{ num_of_sub }};
+
+            // Function to submit the number
+            function submitNumber(num) {
+                fetch('/percentage', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ num , num_of_sub: numOfSub}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display the result
+                    if (data.result) {
+                        resultDiv.textContent =  data.result;
+                        resultDiv.classList.remove('error');
+                    } else if (data.error) {
+                        resultDiv.textContent = 'Error: ' + data.error;
+                        resultDiv.classList.add('error');
+                    }
+                    resultDiv.style.display = 'block';
+                    form.reset();
+                    numInput.value = '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            // Handle input from the virtual keyboard
+            keys.forEach(key => {
+                key.addEventListener('click', () => {
+                    const value = key.textContent;
+                    if (value === 'Clear') {
+                        numInput.value = ''; // Clear the input
+                        resultDiv.style.display = 'none'; // Hide the result
+                    } else if (value === 'Enter') {
+                        const valueToSubmit = numInput.value.trim(); // Get the input value
+                        if (valueToSubmit) {
+                            submitNumber(parseInt(valueToSubmit)); // Submit the number
+                        }
+                    } else {
+                        numInput.value += value; // Append clicked value
+                    }
+                });
+            });
+
+            // Handle Enter key press to submit the number
+            numInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default action
+                    const value = numInput.value.trim(); // Get the input value
+                    if (value) {
+                        submitNumber(parseInt(value)); // Submit the number
+                    }
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock %}
