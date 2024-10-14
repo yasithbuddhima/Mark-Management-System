@@ -193,5 +193,43 @@ def marksheet():
                            final_marks_db=final_marks_db,
                            marks_by_desc=marks_by_desc)
 
+@app.route("/editmarks", methods=["GET", "POST"])
+@login_required
+def editmarks():
+    if request.method == "GET":
+        class_id = session["class_id"]
+        student_id = request.args.get("student_id")
+        marks_db = []
+        if student_id:
+            student_id = int(student_id)
+            marks_db = db.execute("SELECT subject , mark FROM students WHERE student_id = ? AND class_id = ?" , student_id,class_id)
+            
+        num_of_students = db.execute("SELECT MAX(student_id) AS num_of_students FROM students WHERE class_id = ? ", class_id)
+        num_of_students = int(num_of_students[0]["num_of_students"])
+        if student_id and (student_id < 0 or student_id > num_of_students):
+            flash("Invalied Student Id","danger")
+            return redirect("/editmarks")
+        
+        return render_template("editmarks.html", 
+                               student_id=student_id,
+                               num_of_students=num_of_students,
+                               marks_db=marks_db)
+    else:
+        class_id = session["class_id"]
+        subject = request.form.get("subject")
+        new_mark = request.form.get("new_mark")
+        new_mark = int(new_mark)
+        student_id = request.form.get("student_id")
+        if not subject or not new_mark:
+            flash("Fill all details" , "danger")
+            return redirect(f"/editmarks?student_id={student_id}")
+        elif new_mark > 100 :
+            flash("Invalied mark" , "danger")
+            return redirect(f"/editmarks?student_id={student_id}")
+
+        db.execute("UPDATE students SET mark = ? WHERE student_id = ? AND class_id = ? AND subject = ?", new_mark,student_id,class_id,subject)
+        flash(f"Successfully changed student id:-{student_id}  {subject} marks to {new_mark}","info")
+        return render_template("editmarks.html")
+
 if __name__ == "__main__":
     app.run(debug=True ,host='0.0.0.0')
