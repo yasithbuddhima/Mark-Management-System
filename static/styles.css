@@ -67,3 +67,97 @@ input {
     z-index: 10; /* Higher z-index to appear above other cells */
 }
 
+.mainDiv{
+    display: flex;
+    flex-wrap: wrap;
+}
+@media (min-width: 768px) {
+    .flex-item {
+        flex: 0 0 48%; /* Two items per row with some gap */
+        margin-bottom: 10px; /* Space between rows */
+        padding: 0px;
+    }
+}
+.flex-item {
+    color: white;
+    padding: 00px;
+    text-align: center;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-right: 10px;
+    justify-content: space-around; 
+
+}
+/* Styles for phone screens */
+@media (max-width: 767px) {
+    .flex-item {
+        flex: 0 0 100%; /* One item per row */
+        margin-bottom: 10px;
+        
+    }
+}
+
+.satisfy-regular {
+    font-family: "Satisfy", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 50px;
+  }
+  
+  .card {
+    background-size: cover; /* Scale the image to cover the entire element */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    width: 100%; /* Set a width for the element */
+    height: 180px; /* Set a height for the element (adjust as needed) */
+}
+.add{
+    background-image: url("add.jpg"); /* Correctly referencing the image URL */
+
+}
+
+.edit{
+    background-image: url("edit.png");
+}
+.view{
+    background-image: url("view.png");
+}
+
+.calc{
+    background-image: url("calc.png");
+}
+body{
+    background-image: url("background.jpg");
+    background-size: cover; /* Scale the image to cover the entire element */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    width: 100%; /* Set a width for the element */
+    height: 100vh; 
+    
+}
+.home a{
+    text-decoration: none;  /* Remove underline */
+    color: inherit;         /* Inherit color from parent element */
+    background: none;      /* Remove background */
+    border: none;          /* Remove border */
+    padding: 0;            /* Remove padding */
+    margin: 0;             /* Remove margin */
+    display: block;        /* Make the link a block element */
+    width: 100%;           /* Full width */
+    height: auto;          /* Height auto to fit content */
+    cursor: pointer; 
+}
+
+
+
+.blurreddiv{
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: #f70505;
+    border-radius: 10px;
+    border: 2px;
+    padding: 50px 5vw;
+    max-height: 100vh;
+    max-width: 100vw;
+    border-style:solid;
+}

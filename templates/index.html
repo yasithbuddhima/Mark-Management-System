@@ -5,13 +5,12 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/login" method="post">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Go</button>
-    </form>
+
+    <div class="mainDiv flex-container ">
+        <a href="/addmarks" class="home flex-item"  style="text-decoration: none;"><div class="card satisfy-regular flex-item text-black add  mb-3 ">Add marks</div></a>
+        <a href="/marksheet"  class="home flex-item" style="text-decoration: none;"><div class="card satisfy-regular flex-item text-black view mb-3">View Marks</div></a>
+        <a href="/editmarks"  class="home flex-item" style="text-decoration: none;"><div class="card satisfy-regular flex-item text-black edit mb-3">Edit Marks</div></a>
+        <a href="/percentage" class="home flex-item" style="text-decoration: none;"><div class="card satisfy-regular flex-item text-black calc mb-3">Calculate Percentage</div></a>
+    </div>
+    
 {% endblock %}
