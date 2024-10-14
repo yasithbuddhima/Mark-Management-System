@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Mark Sheet
+{% endblock %}
+
+{% block main %}
+<button type="button" class="btn btn-primary mb-3" id="exportButton">
+    <ion-icon name="download-outline"></ion-icon>
+    Download as Excel File
+</button>
+
+<div class="table-responsive">
+    <table class="table  table-bordered table-hover" id="dataTable">
+        <thead class="thead-light">
+            <tr style="font-weight: 500;" >
+                <th class="text-start fixed-column " >  Student Id</th>
+                {% for subject in subjects_db %}
+                    <th class="text-end ">{{ subject.name }}</th>
+                {% endfor %}
+                <th class="text-end ">TOTAL</th>
+                <th class="text-start ">Percentage</th>
+                <th class="text-center ">Place</th>
+                <th class="text-center fixed-column">Id</th>
+                <th class="text-center ">Edit</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for student_id in range(1, num_of_students + 1) %}
+                {% set ns = namespace(tr_class = '') %}
+                {% for final_mark in final_marks_db %}
+                    {% if final_mark.student_id == student_id %}
+                        {% if final_mark.place == 1 %}{% set ns.tr_class = "table-warning" %}
+                        {% elif final_mark.place == 2 %}{% set ns.tr_class = "table-success" %}
+                        {% elif final_mark.place == 3 %}{% set ns.tr_class = "table-info" %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <tr class="{{ ns.tr_class  }}">
+                    <td class="text-start fixed-column">{{ student_id }}</td>
+                        {% for subject in subjects_db %}
+                            {% set ns = namespace(found_mark = none) %}
+                            {% for mark in marks_db %}
+                                {% if mark.student_id == student_id and subject.name == mark.subject %}
+                                    {% set ns.found_mark = mark.mark %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if ns.found_mark is none %}
+                                <td class="text-start " style="color: rgba(0, 0, 0, 0.4);">00</td>
+                            {% else %}
+                                <td class="text-start" style="font-weight: 400;">{{ ns.found_mark }}</td>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for final_mark in final_marks_db %}
+                            {% if final_mark.student_id == student_id %}
+                                <td class="text-end" style="font-weight: 500;">{{ final_mark.total }}</td>
+                                <td class="text-start">{{ final_mark.percentage }}</td>
+                                <td class="text-center" style="font-weight: 500;">{{ final_mark.place }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    <td class="text-end" style="color: rgba(0, 0, 0, 0.4);" >{{ student_id }}</td>
+                    <td>
+                        <form action="/editmarks" method="get">
+                            <input name="student_id" value="{{student_id}}" hidden>
+                            <button class="btn btn-primary" type="submit">
+                                <ion-icon name="create-outline" ></ion-icon>
+                                
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>  
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('exportButton').addEventListener('click', function() {
+            // Get the HTML table
+            const table = document.getElementById('dataTable');
+
+            // Create a workbook and a worksheet
+            const wb = XLSX.utils.table_to_book(table, { sheet: 'Sheet1' });
+
+            // Generate the Excel file and prompt the user to download
+            XLSX.writeFile(wb, 'table_data.xlsx');
+        });
+    </script>
+
+        
+
+{% endblock %}

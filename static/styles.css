@@ -59,3 +59,11 @@ input {
 .fletter{
     color: black;
 }
+
+.fixed-column {
+    position: sticky;
+    left: 0; /* Fixes the column to the left */
+    background-color: white; /* Background color to cover other content */
+    z-index: 10; /* Higher z-index to appear above other cells */
+}
+

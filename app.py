@@ -154,8 +154,44 @@ def addmarks():
 
         student_id = student_id + 1
         # Process the number (your logic could go here, like database insertion)
-        return jsonify({"marks" : f"{one}" , "subject" : f"{subject}", "current_student" : f"{student_id}" ,"clear_flash": True})
+        return jsonify({"marks" : f"{marks}" , "subject" : f"{subject}", "current_student" : f"{student_id}" ,"clear_flash": True})
 
+@app.route("/marksheet", methods=["GET", "POST"])
+@login_required
+def marksheet():
+    class_id = session["class_id"]
+    subjects_db = db.execute("SELECT name FROM subjects WHERE level = (SELECT level FROM classes WHERE class_id = ?)" , class_id)
+    marks_db = db.execute("SELECT * FROM students WHERE class_id = ? GROUP BY student_id , subject ",class_id)
+    num_of_students = db.execute("SELECT MAX(student_id) AS num_of_students FROM students WHERE class_id = ? ", class_id)
+    num_of_students = num_of_students[0]["num_of_students"]
+
+    db.execute("DELETE FROM marks")
+
+    for student_id in range(1, num_of_students + 1):
+        total = db.execute("SELECT SUM(mark) AS total FROM students WHERE student_id = ? AND class_id = ?" , student_id , class_id)
+        total = total[0]["total"]
+
+        sub_count = db.execute("SELECT COUNT(name) AS sub_count FROM subjects WHERE level = (SELECT level FROM classes WHERE class_id = ?)" , class_id)
+        sub_count=sub_count[0]["sub_count"]
+
+        percentage = int(total) / int(sub_count)
+        percentage_formatted = f"{percentage:.2f}"
+
+        db.execute("INSERT INTO marks (student_id , class_id , total , percentage) VALUES (?,?,?,?)", student_id , class_id , total , percentage_formatted)
+    
+    marks_by_desc= db.execute("SELECT student_id FROM marks ORDER BY total DESC")
+    for place in range(1, num_of_students + 1):
+        student_id = marks_by_desc[place - 1]["student_id"]
+        db.execute("UPDATE marks SET place = ? WHERE student_id = ?", place, student_id)
+
+    
+    final_marks_db = db.execute("SELECT * FROM marks")
+    return render_template("marksheet.html" , 
+                           subjects_db=subjects_db ,
+                           marks_db=marks_db ,
+                           num_of_students=num_of_students ,
+                           final_marks_db=final_marks_db,
+                           marks_by_desc=marks_by_desc)
 
 if __name__ == "__main__":
     app.run(debug=True ,host='0.0.0.0')
