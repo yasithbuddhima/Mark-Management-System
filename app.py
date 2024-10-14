@@ -184,7 +184,8 @@ def marksheet():
         student_id = marks_by_desc[place - 1]["student_id"]
         db.execute("UPDATE marks SET place = ? WHERE student_id = ?", place, student_id)
 
-    
+    db.execute("UPDATE marks SET place = ( SELECT MIN(place) FROM marks m2 WHERE m2.total = marks.total) WHERE total IN ( SELECT total FROM marks GROUP BY total  HAVING COUNT(student_id) > 1 );" )
+
     final_marks_db = db.execute("SELECT * FROM marks")
     return render_template("marksheet.html" , 
                            subjects_db=subjects_db ,
