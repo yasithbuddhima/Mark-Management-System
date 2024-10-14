@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
+<div class="blurreddiv">
     {% if not num_of_sub > 1 %}
         <form action="/percentage" method="get">
             <div class="mb-3">
@@ -28,7 +29,7 @@
             <div class="key" id="zero">0</div>
             <div class="key" id="enter">Enter</div>
         </div>
-
+</div>
         <script>
             const form = document.getElementById('numberForm');
             const numInput = document.getElementById('num');

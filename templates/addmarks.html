@@ -6,6 +6,7 @@
 
 
 {% block main %}
+<div class="blurreddiv">
     {% if subjects_db %}
         <form action="/addmarks" method="get">
             <select class="form-select mx-auto  mb-3" name="subject" style="width: 205px;" required>
@@ -19,17 +20,15 @@
     {% else %}
 
     {% set student_id = student_id %}
-
         <div id="result" style="display: block;">Add marks of student no: {{ student_id }}</div>
-        <form id="numberForm">
-            {% if student_id %}
-                <input type="text" id="num" placeholder="Student No: {{ student_id }}" required readonly>
-            {% else %}
-                <input type="text" id="num" placeholder="Student No:- " required readonly>
-            {% endif %}
-        </form>
+            <form id="numberForm">
+                {% if student_id %}
+                    <input type="text" id="num" placeholder="Student No: {{ student_id }}" required readonly>
+                {% else %}
+                    <input type="text" id="num" placeholder="Student No:- " required readonly>
+                {% endif %}
+            </form>
         <div class="keyboard">
-            <!-- Numeric keys -->
             <div class="key">1</div>
             <div class="key">2</div>
             <div class="key">3</div>
@@ -39,107 +38,106 @@
             <div class="key">7</div>
             <div class="key">8</div>
             <div class="key">9</div>
-            <!-- Zero, 100 and clear -->
             <div class="key" id="hundred">100</div>
             <div class="key" id="zero">0</div>
             <div class="key" id="clear">Clear</div>
         </div>
+</div>
+    <script>
+        const form = document.getElementById('numberForm');
+        const numInput = document.getElementById('num');
+        const resultDiv = document.getElementById('result');
+        const keys = document.querySelectorAll('.key');
+        const clearButton = document.getElementById('clear');
+        const zeroButton = document.getElementById('zero');
+        const hundredButton = document.getElementById('hundred');
 
-        <script>
-            const form = document.getElementById('numberForm');
-            const numInput = document.getElementById('num');
-            const resultDiv = document.getElementById('result');
-            const keys = document.querySelectorAll('.key');
-            const clearButton = document.getElementById('clear');
-            const zeroButton = document.getElementById('zero');
-            const hundredButton = document.getElementById('hundred');
-            let timer = null;
+        let timer = null; 
 
-            // Function to submit the number
-            function submitNumber(num) {
-                fetch('/addmarks', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ num: num, subject: "{{ subject }}" }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Display the result
-                    resultDiv.innerHTML = "<span> Student "+ (data.current_student - 1) + " Marks: </span>" + data.marks;
-                    
-                    numInput.placeholder = "Student No: " + data.current_student 
+        function submitNumber(num) {
+            fetch('/addmarks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ num: num, subject: "{{ subject }}" }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the result
+                resultDiv.innerHTML = "<span> Student "+ (data.current_student - 1) + " Marks: </span>" + data.marks;
+                
+                numInput.placeholder = "Student No: " + data.current_student 
 
-                    
-                    // Clear the form
-                    form.reset();
-                    numInput.value = ''; // Clear the input field
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-
-            // Function to handle input from the virtual keyboard
-            function handleInput(value) {
-                const currentValue = numInput.value;
-
-                // If '100' is clicked, submit immediately
-                if (value === '100') {
-                    numInput.value = '100';
-                    submitNumber(100);
-                    return;
-                }
-
-                // Prevent adding more than two digits for regular numbers
-                if (currentValue.length < 2) {
-                    numInput.value += value;
-                }
-
-                const num = parseInt(numInput.value);
-
-                // Clear previous timer if exists
-                clearTimeout(timer);
-
-                // If the number is between 10 and 99, submit immediately
-                if (num >= 10 && num <= 99) {
-                    submitNumber(num);
-                } else if (num >= 1 && num <= 9) {
-                    // Wait to see if the user enters another digit
-                    timer = setTimeout(() => {
-                        submitNumber(num);
-                    }, 500); // 500ms delay
-                }
-            }
-
-            // Add event listener for each key
-            keys.forEach(key => {
-                if (key.textContent !== "Clear") {
-                    key.addEventListener('click', () => {
-                        handleInput(key.textContent);
-                    });
-                }
+                
+                // Clear the form
+                form.reset();
+                numInput.value = ''; // Clear the input field
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
+        }
 
-            // Submit immediately when 0 is clicked
-            zeroButton.addEventListener('click', () => {
-                numInput.value = '0';
-                submitNumber(0);
-            });
+        // Function to handle input from the virtual keyboard
+        function handleInput(value) {
+            const currentValue = numInput.value;
 
-            // Submit immediately when 100 is clicked
-            hundredButton.addEventListener('click', () => {
+            // If '100' is clicked, submit immediately
+            if (value === '100') {
                 numInput.value = '100';
                 submitNumber(100);
-            });
+                return;
+            }
 
-            // Handle clear button
-            clearButton.addEventListener('click', () => {
-                numInput.value = '';
-                resultDiv.textContent = ''; // Clear the result
-                clearTimeout(timer); // Cancel the auto-submit timer
-            });
-        </script>
+            // Prevent adding more than two digits for regular numbers
+            if (currentValue.length < 2) {
+                numInput.value += value;
+            }
+
+            const num = parseInt(numInput.value);
+
+            // Clear previous timer if exists
+            clearTimeout(timer);
+
+            // If the number is between 10 and 99, submit immediately
+            if (num >= 10 && num <= 99) {
+                submitNumber(num);
+            } else if (num >= 1 && num <= 9) {
+                // Wait to see if the user enters another digit
+                timer = setTimeout(() => {
+                    submitNumber(num);
+                }, 500);
+            }
+        }
+
+        // Add event listener for each key
+        keys.forEach(key => {
+            if (key.textContent !== "Clear") {
+                key.addEventListener('click', () => {
+                    handleInput(key.textContent);
+                });
+            }
+        });
+
+        // Submit immediately when 0 is clicked
+        zeroButton.addEventListener('click', () => {
+            numInput.value = '0';
+            submitNumber(0);
+        });
+
+        // Submit immediately when 100 is clicked
+        hundredButton.addEventListener('click', () => {
+            numInput.value = '100';
+            submitNumber(100);
+        });
+
+        // Handle clear button
+        clearButton.addEventListener('click', () => {
+            numInput.value = '';
+            resultDiv.textContent = '';
+            clearTimeout(timer); // Cancel the auto-submit timer
+        });
+    </script>
     {% endif %}
 {% endblock %}

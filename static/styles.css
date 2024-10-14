@@ -7,9 +7,9 @@
 }
 
 .key {
-    display: flex; /* Enables Flexbox */
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
+    display: flex;
+    justify-content: center; 
+    align-items: center;
     padding: 20px;
     font-size: 20px;
     text-align: center;
@@ -19,9 +19,9 @@
     height: 85px;
     width: 85px;
     margin: 6px; 
-    border-radius: 10px; /* Rounds the corners for a nicer look */
-    border: 2px solid #bbb; /* Adds a subtle border */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a slight shadow */
+    border-radius: 10px; 
+    border: 2px solid #bbb; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -37,23 +37,23 @@ input {
 }
 
 
-/* Styling the result */
+
 #result {
     margin-bottom: 20px;
     padding: 10px;
     font-size: 22px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #4CAF50; /* Green background */
-    border-radius: 5px; /* Rounded corners */
+    background-color: #4CAF50; 
+    border-radius: 5px; 
     text-align: center;
-    display: none; /* Hide initially */
+    display: none; 
 }
 #result span {
     color: rgba(255, 255, 255, 0.555);
 }
 #result.error {
-    background-color: #f44336; /* Red background for error */
+    background-color: #f44336; 
 }
 
 .fletter{
@@ -62,9 +62,9 @@ input {
 
 .fixed-column {
     position: sticky;
-    left: 0; /* Fixes the column to the left */
-    background-color: white; /* Background color to cover other content */
-    z-index: 10; /* Higher z-index to appear above other cells */
+    left: 0; 
+    background-color: white; 
+    z-index: 10; 
 }
 
 .mainDiv{
@@ -73,8 +73,8 @@ input {
 }
 @media (min-width: 768px) {
     .flex-item {
-        flex: 0 0 48%; /* Two items per row with some gap */
-        margin-bottom: 10px; /* Space between rows */
+        flex: 0 0 48%;
+        margin-bottom: 10px; 
         padding: 0px;
     }
 }
@@ -88,10 +88,10 @@ input {
     justify-content: space-around; 
 
 }
-/* Styles for phone screens */
+
 @media (max-width: 767px) {
     .flex-item {
-        flex: 0 0 100%; /* One item per row */
+        flex: 0 0 100%; 
         margin-bottom: 10px;
         
     }
@@ -105,14 +105,14 @@ input {
   }
   
   .card {
-    background-size: cover; /* Scale the image to cover the entire element */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    width: 100%; /* Set a width for the element */
-    height: 180px; /* Set a height for the element (adjust as needed) */
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    width: 100%;
+    height: 180px; 
 }
 .add{
-    background-image: url("add.jpg"); /* Correctly referencing the image URL */
+    background-image: url("add.jpg"); 
 
 }
 
@@ -128,23 +128,23 @@ input {
 }
 body{
     background-image: url("background.jpg");
-    background-size: cover; /* Scale the image to cover the entire element */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    width: 100%; /* Set a width for the element */
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    width: 100%; 
     height: 100vh; 
     
 }
 .home a{
-    text-decoration: none;  /* Remove underline */
-    color: inherit;         /* Inherit color from parent element */
-    background: none;      /* Remove background */
-    border: none;          /* Remove border */
-    padding: 0;            /* Remove padding */
-    margin: 0;             /* Remove margin */
-    display: block;        /* Make the link a block element */
-    width: 100%;           /* Full width */
-    height: auto;          /* Height auto to fit content */
+    text-decoration: none;  
+    color: inherit;         
+    background: none;      
+    border: none;         
+    padding: 0;            
+    margin: 0;            
+    display: block;      
+    width: 100%;          
+    height: auto;       
     cursor: pointer; 
 }
 
@@ -153,7 +153,6 @@ body{
 .blurreddiv{
     display: inline-block;
     background-color: rgba(0, 0, 0, 0.6);
-    border-color: #f70505;
     border-radius: 10px;
     border: 2px;
     padding: 50px 5vw;

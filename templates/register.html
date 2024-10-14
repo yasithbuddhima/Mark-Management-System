@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+<div class="blurreddiv">
     <form action="/register" method="post">
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="class" placeholder="Class (ex:- 10-B)" type="text" required>
@@ -27,5 +28,6 @@
             
         <button class="btn btn-primary" type="submit">Add New class</button>
     </form>
+</div>
 {% endblock %}
 

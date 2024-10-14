@@ -5,24 +5,25 @@
 {% endblock %}
 
 {% block main %}
+<div class="blurreddiv">
     {% if not student_id %}
-    <form action="/editmarks" method="get">
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="student_id" placeholder="Student ID" type="number" max="{{num_of_students}}" required>
-        </div>
-        <button class="btn btn-primary" type="submit">Edit Marks</button>
-    </form>
+        <form action="/editmarks" method="get">
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" name="student_id" placeholder="Student ID" type="number" max="{{num_of_students}}" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Edit Marks</button>
+        </form>
     {% else %}
-        <form action="/editmarks" method="post">           
+        <form action="/editmarks" method="post" style="color: #ffff;">           
             <div class="mb-3" style="font-weight: bolder;">
-                <h4> Student Id:- {{student_id}} </h4>
+                    <h4> Student Id:- {{student_id}} </h4>
                 {% for mark in marks_db %}
                     <h5> {{mark.subject}} :- {{mark.mark}} </h5>
                 {% endfor %}
             </div>
             <input name="student_id" value="{{student_id}}" hidden>
             <select class="form-select mx-auto  mb-3" name="subject" style="width: 205px;" required>
-                <option disabled selected>Subject</option>
+                    <option disabled selected>Subject</option>
                 {% for mark in marks_db %}
                     <option value="{{mark.subject}}">{{mark.subject}}</option>
                 {% endfor %}
@@ -33,5 +34,6 @@
             <button class="btn btn-primary" type="submit">Edit Marks</button>
         </form>
     {% endif %}
+</div>
 {% endblock %}
 

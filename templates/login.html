@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block main %}
+<div class="blurreddiv">
     <form action="/login" method="post">
-        
         <select class="form-select mx-auto  mb-3" name="class_id" style="width: 205px;" required>
             <option disabled selected>Select Class</option>
             {% for class in class_db %}
@@ -15,4 +15,5 @@
         </select>
         <button class="btn btn-primary" type="submit">Go to class</button>
     </form>
+</div>
 {% endblock %}
