@@ -3,8 +3,13 @@ from flask_session import Session
 from cs50 import SQL
 from functools import wraps
 import secrets
+import os
 
 app = Flask(__name__)
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+database_path = os.path.join(BASE_DIR, "mms.db")
+
 
 # Generate a random 16-byte secret key
 app.secret_key = secrets.token_hex(16)
