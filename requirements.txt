@@ -30,7 +30,7 @@ setuptools==75.3.0
 SQLAlchemy==2.0.35
 sqlparse==0.5.1
 submit50==3.1.5
-termcolor==2.5.0
+termcolor<2
 typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.2.3
